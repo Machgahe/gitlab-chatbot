@@ -19,6 +19,10 @@ URLS = [
     "https://handbook.gitlab.com/handbook/finance/",
     "https://handbook.gitlab.com/handbook/legal/",
     "https://handbook.gitlab.com/handbook/it/",
+    "https://handbook.gitlab.com/handbook/engineering/workflow/",
+    "https://handbook.gitlab.com/handbook/engineering/code-review/",
+    "https://handbook.gitlab.com/handbook/engineering/development/",
+    "https://handbook.gitlab.com/handbook/engineering/management/",
 ]
 
 def scrape_page(url):
