@@ -2,12 +2,23 @@ import requests
 from bs4 import BeautifulSoup
 
 # A few GitLab handbook pages to start with
+
 URLS = [
     "https://handbook.gitlab.com/handbook/values/",
     "https://handbook.gitlab.com/handbook/company/culture/",
     "https://handbook.gitlab.com/handbook/communication/",
     "https://handbook.gitlab.com/handbook/people-group/",
     "https://handbook.gitlab.com/handbook/engineering/",
+    "https://handbook.gitlab.com/handbook/company/mission/",
+    "https://handbook.gitlab.com/handbook/company/strategy/",
+    "https://handbook.gitlab.com/handbook/hiring/",
+    "https://handbook.gitlab.com/handbook/total-rewards/",
+    "https://handbook.gitlab.com/handbook/security/",
+    "https://handbook.gitlab.com/handbook/product/",
+    "https://handbook.gitlab.com/handbook/marketing/",
+    "https://handbook.gitlab.com/handbook/finance/",
+    "https://handbook.gitlab.com/handbook/legal/",
+    "https://handbook.gitlab.com/handbook/it/",
 ]
 
 def scrape_page(url):
