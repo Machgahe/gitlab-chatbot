@@ -3,7 +3,7 @@
 An AI-powered chatbot that allows users to query GitLab's Handbook and Direction pages using natural language. Built with a RAG (Retrieval-Augmented Generation) pipeline, Groq LLM, and Streamlit.
 
 ## 🔗 Live Demo
-[Click here to try the chatbot](https://app-chatbot-bafhtdynpfqgf8q5ufxmhm.streamlit.app) ← Replace with your actual URL
+[Click here to try the chatbot](https://app-chatbot-bafhtdynpfqgf8q5ufxmhm.streamlit.app)
 
 ---
 
