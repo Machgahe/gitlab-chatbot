@@ -1,4 +1,5 @@
-import chromadb
+import json
+import numpy as np
 from sentence_transformers import SentenceTransformer
 from groq import Groq
 from dotenv import load_dotenv
@@ -8,23 +9,25 @@ load_dotenv()
 
 client_groq = Groq(api_key=os.getenv("GROQ_API_KEY"))
 model = SentenceTransformer("all-MiniLM-L6-v2")
-client_db = chromadb.PersistentClient(path="./db")
-collection = client_db.get_or_create_collection(name="gitlab_handbook")
+
+with open("data.json", "r") as f:
+    data = json.load(f)
+
+texts = [d["text"] for d in data]
+urls = [d["url"] for d in data]
+embeddings = np.array([d["embedding"] for d in data])
+
+def cosine_similarity(a, b):
+    return np.dot(b, a) / (np.linalg.norm(b, axis=1) * np.linalg.norm(a))
 
 def ask(question):
-    # Step 1: Convert question to embedding
-    question_embedding = model.encode([question]).tolist()
+    question_embedding = model.encode([question])[0]
+    scores = cosine_similarity(question_embedding, embeddings)
+    top_indices = np.argsort(scores)[-3:][::-1]
 
-    # Step 2: Find top 3 most relevant chunks from ChromaDB
-    results = collection.query(
-        query_embeddings=question_embedding,
-        n_results=3
-    )
+    chunks = [texts[i] for i in top_indices]
+    sources = list(set([urls[i] for i in top_indices]))
 
-    chunks = results["documents"][0]
-    sources = [m["url"] for m in results["metadatas"][0]]
-
-    # Step 3: Build prompt with context
     context = "\n\n".join(chunks)
     prompt = f"""You are a helpful assistant for GitLab employees.
 Answer the question using ONLY the context below.
@@ -37,7 +40,6 @@ Question: {question}
 
 Answer:"""
 
-    # Step 4: Ask Groq (using Llama 3)
     response = client_groq.chat.completions.create(
         model="llama-3.1-8b-instant",
         messages=[{"role": "user", "content": prompt}]
@@ -45,7 +47,7 @@ Answer:"""
 
     return {
         "answer": response.choices[0].message.content,
-        "sources": list(set(sources))
+        "sources": sources
     }
 
 if __name__ == "__main__":
